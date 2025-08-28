@@ -2,27 +2,26 @@ import { useState } from 'react'
 
 const Title = ({text}) => <h1>{text}</h1>
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
-const Counter = ({counter, text}) => <p>{text} {counter}</p>
+const StadisticLine = ({value, text}) => <p>{text} {value}</p>
 const Display = ({text}) => <p>{text}</p>
+
 
 const Stadistics = ({clicks}) => {
   if (clicks.all === 0){
     return(
       <div>
-        <Title text='Stadistics'/>
         <Display text = 'No feedback given'/>
       </div>
     )
   }else{
     return(
       <div>
-        <Title text='Stadistics'/>
-        <Counter counter={clicks.good} text='Good: '/>
-        <Counter counter={clicks.neutral} text='Neutral: '/>
-        <Counter counter={clicks.bad} text='Bad: '/>
-        <Counter counter={clicks.all} text='All: '/>
-        <Counter counter={clicks.avg/3} text='Avg: '/>
-        <Counter counter={(clicks.good/clicks.all)*100 +'%'} text='Good percent'/>
+        <StadisticLine value={clicks.good} text='Good: '/>
+        <StadisticLine value={clicks.neutral} text='Neutral: '/>
+        <StadisticLine value={clicks.bad} text='Bad: '/>
+        <StadisticLine value={clicks.all} text='All: '/>
+        <StadisticLine value={clicks.avg/clicks.all} text='Avg: '/>
+        <StadisticLine value={(clicks.good/clicks.all)*100 +'%'} text='Good percent'/>
       </div>
     )
   }
@@ -53,6 +52,7 @@ const App = () => {
       <Button onClick={clickedGood} text='Good'/>
       <Button onClick={clickedNeutral} text='Neutral'/>
       <Button onClick={clickedBad} text='Bad'/>
+      <Title text='Stadistics'/>
       <Stadistics clicks={clicks}/>
     </div>
   )
