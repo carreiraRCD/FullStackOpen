@@ -2,7 +2,14 @@ import { useState } from 'react'
 
 const Title = ({text}) => <h1>{text}</h1>
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
-const StadisticLine = ({value, text}) => <p>{text} {value}</p>
+const StadisticLine = ({value, text}) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  )
+}
 const Display = ({text}) => <p>{text}</p>
 
 
@@ -16,12 +23,16 @@ const Stadistics = ({clicks}) => {
   }else{
     return(
       <div>
-        <StadisticLine value={clicks.good} text='Good: '/>
-        <StadisticLine value={clicks.neutral} text='Neutral: '/>
-        <StadisticLine value={clicks.bad} text='Bad: '/>
-        <StadisticLine value={clicks.all} text='All: '/>
-        <StadisticLine value={clicks.avg/clicks.all} text='Avg: '/>
-        <StadisticLine value={(clicks.good/clicks.all)*100 +'%'} text='Good percent'/>
+        <table>
+          <tbody>
+            <StadisticLine value={clicks.good} text='Good: '/>
+            <StadisticLine value={clicks.neutral} text='Neutral: '/>
+            <StadisticLine value={clicks.bad} text='Bad: '/>
+            <StadisticLine value={clicks.all} text='All: '/>
+            <StadisticLine value={clicks.avg/clicks.all} text='Avg: '/>
+            <StadisticLine value={(clicks.good/clicks.all)*100 +'%'} text='Good percent'/>
+          </tbody>
+        </table>
       </div>
     )
   }
