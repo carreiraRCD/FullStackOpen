@@ -20,10 +20,20 @@ const App = () => {
     setSelected(num)
   }
 
+  const [votes, setNewVote] = useState(new Array(anecdotes.length).fill(0))
+
+  const voteFor = () => {
+    const copy = {...votes}
+    copy[selected] += 1
+    setNewVote(copy)
+  }
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <button onClick={randomNumber}>Next anecdotes</button>
+      <p>Has {votes[selected]} votes</p>
+      <button onClick={voteFor}>Vote</button>
+      <button onClick={randomNumber}>Next anecdote</button>
     </div>
   )
 }
