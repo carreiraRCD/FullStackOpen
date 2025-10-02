@@ -4,12 +4,15 @@ import services from './services/services'
 import Persons from './components/Person'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
+
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
   
   useEffect(()=> {
     services
@@ -40,7 +43,15 @@ const App = () => {
       if(res){
         services
           .update(persons.find(p => p.name === newName).id, person)
-          .then(setPersons(persons.map(p => p.name !== newName ? p : {id: persons.find(p => p.name === newName).id, ...person})))
+          .then(returnedPerson => {
+            setPersons(
+            persons.map(p => p.name !== newName ? p : returnedPerson)
+          )
+            setSuccessMessage(`${newName} number modified`)
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 5000)
+          })
       }
       setNewName('')
       setNewNumber('')
@@ -50,7 +61,13 @@ const App = () => {
     
     services
       .create(person)
-      .then(p => setPersons(persons.concat(p)))
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setSuccessMessage(`Added ${newName}`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      })
     
     setNewName('')
     setNewNumber('')
@@ -85,6 +102,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter value={filterName} onChange={handlerFilterChanged}/>
       <h2>Add a new</h2>
+      <Notification message={successMessage}/>
       <PersonForm onSubmit={addPerson} valueName={newName} valueNumber={newNumber} onChangeName={handlerNameChanged} onChangeNumber={handlerNumberChanged}/>
       <h2>Numbers</h2>
       <Persons persons={personsFiltered} onClicked={delPerson}/>
