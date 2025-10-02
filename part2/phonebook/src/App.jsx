@@ -21,24 +21,55 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    
-    if (persons.filter(p => p.name === newName).length > 0){
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
-      return
-    }
+
     const person = {
       name: newName,
       number: newNumber
     }
+
+    if(persons.filter(p => p.name === newName && p.number === newNumber).length > 0){
+
+      alert(`${newName} already added to phonebook with this number`)
+      setNewName('')
+      setNewNumber('')
+      return
+
+    }else if (persons.filter(p => p.name === newName && p.number !== newNumber).length > 0){
+
+      const res = window.confirm(`${newName} is already added to phonebook, replace the old number with the new one?`)
+      if(res){
+        services
+          .update(persons.find(p => p.name === newName).id, person)
+          .then(setPersons(persons.map(p => p.name !== newName ? p : {id: persons.find(p => p.name === newName).id, ...person})))
+      }
+      setNewName('')
+      setNewNumber('')
+      return
+      
+    }
+    
     services
       .create(person)
       .then(p => setPersons(persons.concat(p)))
     
     setNewName('')
     setNewNumber('')
-  }  
+  }
+  
+  const delPerson = (person) => {
+
+    const res = window.confirm(`Delete ${person.name} ?`)
+    if(res){
+      services
+        .del(person.id)
+        .then(setPersons(persons.filter(p=>p.id!==person.id)))
+    }
+    else{
+      console.log('No eliminar')
+    }
+
+    
+  }
 
   const handlerNameChanged = (event) => {
     setNewName(event.target.value)        
@@ -56,7 +87,7 @@ const App = () => {
       <h2>Add a new</h2>
       <PersonForm onSubmit={addPerson} valueName={newName} valueNumber={newNumber} onChangeName={handlerNameChanged} onChangeNumber={handlerNumberChanged}/>
       <h2>Numbers</h2>
-      <Persons persons={personsFiltered}/>
+      <Persons persons={personsFiltered} onClicked={delPerson}/>
     </div>
   )
 }

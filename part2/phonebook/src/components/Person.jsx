@@ -1,12 +1,14 @@
-const Person = ({name, number}) => {
+import Button from './Button'
+
+const Person = ({name, number, onClicked}) => {
     return(
-        <p>{name} {number}</p>
+        <p>{name} {number} <Button onClick={onClicked} text={"Delete"}/></p>
     )
 }
 
-const Persons = ({persons}) => {
+const Persons = ({persons, onClicked}) => {
     return(
-        persons.map(person => <Person key={person.name} name={person.name} number={person.number}/>)
+        persons.map(person => <Person key={person.id} name={person.name} number={person.number} onClicked={()=> onClicked(person)}/>)
     )
 }
 
