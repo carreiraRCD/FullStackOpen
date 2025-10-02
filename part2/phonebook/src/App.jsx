@@ -4,7 +4,7 @@ import services from './services/services'
 import Persons from './components/Person'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import Notification from './components/Notification'
+import {Notification, NotificationError} from './components/Notification'
 
 
 const App = () => {
@@ -12,7 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
-  const [successMessage, setSuccessMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   
   useEffect(()=> {
     services
@@ -47,10 +48,19 @@ const App = () => {
             setPersons(
             persons.map(p => p.name !== newName ? p : returnedPerson)
           )
-            setSuccessMessage(`${newName} number modified`)
+            setMessage(`${newName} number modified`)
             setTimeout(() => {
-              setSuccessMessage(null)
+              setMessage(null)
             }, 5000)
+          })
+          .catch(error => {
+            setErrorMessage(
+              `Information of ${newName} has already been removed from server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPersons(persons.filter(p=>p.name!==newName))
           })
       }
       setNewName('')
@@ -63,9 +73,9 @@ const App = () => {
       .create(person)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        setSuccessMessage(`Added ${newName}`)
+        setMessage(`Added ${newName}`)
         setTimeout(() => {
-          setSuccessMessage(null)
+          setMessage(null)
         }, 5000)
       })
     
@@ -102,7 +112,8 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter value={filterName} onChange={handlerFilterChanged}/>
       <h2>Add a new</h2>
-      <Notification message={successMessage}/>
+      <Notification message={message}/>
+      <NotificationError message={errorMessage}/>
       <PersonForm onSubmit={addPerson} valueName={newName} valueNumber={newNumber} onChangeName={handlerNameChanged} onChangeNumber={handlerNumberChanged}/>
       <h2>Numbers</h2>
       <Persons persons={personsFiltered} onClicked={delPerson}/>
