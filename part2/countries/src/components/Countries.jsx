@@ -1,6 +1,8 @@
-const Country = ({name}) => {
+import Button from './Button'
+
+const Country = ({country, onShow}) => {
     return(
-        <li>{name}</li>
+        <li>{country.name.common} <Button text="Show" onClick={() => onShow(country)}/></li>
     )
 }
 
@@ -25,20 +27,31 @@ const BasicCountry = ({country}) => {
     )
 }
 
-const Countries = ({countries}) => {
+const Countries = ({countries, onShowCountry, selectedCountry}) => {
     if (countries.length > 10){
         return(<p>Too many matches ({countries.length}), specify another filter</p>)
-    }else if(countries.length == 1){
+    }
+    if(countries.length == 1){
         return(
             countries.map(c => <BasicCountry key={c.name.common} country={c}/>)
         )
-    }else{
+    }
+    if(selectedCountry){
         return(
             <p>
-                {countries.map(c => <Country key={c.name.common} name={c.name.common}/>)}
+                {countries.map(c => <Country key={c.name.common} country={c} onShow={onShowCountry}/>)}
+                <BasicCountry country={selectedCountry}/>
             </p>
-        )
+            
+        )        
     }
+
+    return(
+        <p>
+            {countries.map(c => <Country key={c.name.common} country={c} onShow={onShowCountry}/>)}
+        </p>
+    )
+    
 }
 
 export default Countries

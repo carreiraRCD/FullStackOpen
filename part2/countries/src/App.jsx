@@ -7,6 +7,7 @@ function App() {
 
   const [countries, getCountries] = useState([])
   const [filterName, setFilterName] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   useEffect(() => {
     services
@@ -14,7 +15,10 @@ function App() {
       .then(c => getCountries(c))
   }, [])
 
-  const handlerFilterChanged = (event) => setFilterName(event.target.value)
+  const handlerFilterChanged = (event) => {
+    setFilterName(event.target.value)
+    setSelectedCountry(null)
+  }
   
   const countriesFiltered = countries.filter(c => {
     const name = c.name.common.toLowerCase();
@@ -43,7 +47,7 @@ function App() {
       <div>
         <h1>COUNTRIES INFO</h1>
         <Filter value={filterName} onChange={handlerFilterChanged}/>
-        <Countries countries={countriesFiltered}/>
+        <Countries countries={countriesFiltered} onShowCountry={setSelectedCountry} selectedCountry={selectedCountry}/>
       </div>
     </>
   )
