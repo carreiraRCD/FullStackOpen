@@ -57,6 +57,14 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
+// delete person of phonebook by id
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    persons = persons.filter(p => p.id !== id)
+
+    res.status(204).end()
+})
+
 // Init server on port 3001
 const PORT = 3001
 app.listen(PORT, () => {
