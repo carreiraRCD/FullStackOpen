@@ -30,10 +30,12 @@ let persons = [
     }
 ]
 
+// print all persons on phonebok
 app.get('/api/persons', (req, res) => {
     res.send(persons)
 })
 
+// print info of the server
 app.get('/info', (req, res) => {
     const time = new Date()
     res.send(`
@@ -42,6 +44,7 @@ app.get('/info', (req, res) => {
     `)
 })
 
+//print one single persons from phonebook by id
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(p => p.id === id)
