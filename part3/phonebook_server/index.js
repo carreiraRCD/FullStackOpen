@@ -68,6 +68,18 @@ app.delete('/api/persons/:id', (req, res) => {
 // add person to phonebook
 app.post('/api/persons', (req, res) => {
     const body = req.body
+
+    if (!body.name || !body.number){
+        return res.status(400).json({
+            error: 'No name or number'
+        })
+    }
+    
+    if(persons.filter(p => p.name === body.name).length > 0){
+        return res.status(400).json({
+            error: 'Must be unique'
+        })
+    }
     const id = Math.floor(1000 + Math.random() * 9000);
 
     const person = {
