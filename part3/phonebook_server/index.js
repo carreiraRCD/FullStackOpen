@@ -65,6 +65,21 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
+// add person to phonebook
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    const id = Math.floor(1000 + Math.random() * 9000);
+
+    const person = {
+        id: id,
+        name: body.name,
+        number: body.number,
+    }
+
+    persons = persons.concat(person)
+    res.json(person)
+})
+
 // Init server on port 3001
 const PORT = 3001
 app.listen(PORT, () => {
