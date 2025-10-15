@@ -42,6 +42,18 @@ app.get('/info', (req, res) => {
     `)
 })
 
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const person = persons.find(p => p.id === id)
+
+    if(person){
+        res.json(person)
+    }else{
+        res.statusMessage = "No person with this id"
+        res.status(400).end()
+    }
+})
+
 // Init server on port 3001
 const PORT = 3001
 app.listen(PORT, () => {
