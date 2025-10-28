@@ -1,11 +1,12 @@
 // ======== Estrucutura principal de un servidor =========
 
-const cors = require('cors')
-app.use(cors())
 
 // Importamos el modulo del server web
 const express = require('express')
 const app = express() 
+
+const cors = require('cors')
+app.use(cors())
 
 app.use(express.json())
 
