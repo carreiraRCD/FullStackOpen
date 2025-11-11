@@ -69,21 +69,17 @@ app.post('/api/persons', (req, res) => {
         })
     }
     
-    if(persons.filter(p => p.name === body.name).length > 0){
-        return res.status(400).json({
-            error: 'Must be unique'
-        })
-    }
     const id = Math.floor(1000 + Math.random() * 9000);
 
-    const person = {
-        id: id,
-        name: body.name,
-        number: body.number,
-    }
+    const person = new Person({
+      id: id,
+      name: body.name,
+      number: body.number,
+    })
 
-    persons = persons.concat(person)
-    res.json(person)
+    person.save().then(savedPerson => {
+      res.json(savedPerson)
+    })
 })
 
 // Init server on port 3001
