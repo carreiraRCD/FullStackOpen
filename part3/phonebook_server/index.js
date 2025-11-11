@@ -44,10 +44,14 @@ app.get('/api/persons', (req, res, next) => {
 // print info of the server
 app.get('/info', (req, res) => {
     const time = new Date()
-    res.send(`
-        <p>Phonebook has info for ${persons.length} people</p>
-        <p>${time}</p>
-    `)
+    Person.find({})
+      .then(persons => {
+        res.send(`
+          <p>Phonebook has info for ${persons.length} people</p>
+          <p>${time}</p>
+        `)          
+      })
+    
 })
 
 //print one single persons from phonebook by id
