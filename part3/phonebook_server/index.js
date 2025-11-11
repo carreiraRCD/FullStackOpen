@@ -29,10 +29,16 @@ app.use(
 const Person = require('./models/person')
 
 // print all persons on phonebok
-app.get('/api/persons', (req, res) => {
-    Person.find({}).then(persons => {
-      res.json(persons)
-    })
+app.get('/api/persons', (req, res, next) => {
+    Person.find({})
+      .then(persons => {
+        if (persons){
+          res.json(persons)
+        } else {
+          response.status(404).end()
+        }
+      })
+      .catch(error => next(error))
 })
 
 // print info of the server
@@ -45,14 +51,20 @@ app.get('/info', (req, res) => {
 })
 
 //print one single persons from phonebook by id
-app.get('/api/persons/:id', (req, res) => {
-    Person.findById(req.params.id).then(note => {
-      res.json(note)
+app.get('/api/persons/:id', (req, res, next) => {
+    Person.findById(req.params.id)
+      .then(person => {
+        if (person) {
+          response.json(person)
+        } else {
+          response.status(404).end()
+        }
     })
+      .catch(error => next(error))
 })
 
 // delete person of phonebook by id
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndDelete(req.params.id)
       .then(result => {
         res.status(204).end()
