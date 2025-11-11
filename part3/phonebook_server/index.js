@@ -95,6 +95,22 @@ app.post('/api/persons', (req, res) => {
     })
 })
 
+//update person on phonebook
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(req.params.id, person, {new: true})
+    .then(uddatedPerson => {
+      res.json(udpatePerson)
+    })
+    .catch(error => next(error))
+})
+
 // Init server on port 3001
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
