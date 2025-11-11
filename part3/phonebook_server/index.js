@@ -1,7 +1,7 @@
 // ====== PHONEBOOK SERVER ======
 
 // Import server module
-
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const app = express() 
@@ -26,32 +26,45 @@ app.use(
   })
 )
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+const mongoose = require('mongoose')
+
+mongoose.set('strictQuery', false)
+
+
+const url = process.env.MONGODB_URI
+
+
+console.log('connecting to', url)
+
+mongoose.connect(url)
+
+  .then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch(error => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+})
+
+personSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+
+const Person = mongoose.model('Person', personSchema)
 
 // print all persons on phonebok
 app.get('/api/persons', (req, res) => {
-    res.send(persons)
+    Person.find({}).then(persons => {
+      res.json(persons)
+    })
 })
 
 // print info of the server
@@ -65,15 +78,9 @@ app.get('/info', (req, res) => {
 
 //print one single persons from phonebook by id
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(p => p.id === id)
-
-    if(person){
-        res.json(person)
-    }else{
-        res.statusMessage = "No person with this id"
-        res.status(400).end()
-    }
+    Person.findById(req.params.id).then(note => {
+      res.json(note)
+    })
 })
 
 // delete person of phonebook by id
