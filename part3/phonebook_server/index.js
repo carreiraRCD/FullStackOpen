@@ -7,7 +7,6 @@ const morgan = require('morgan')
 const app = express() 
 
 app.use(express.json())
-app.use(express.static('dist'))
 
 // token for body
 morgan.token('body', (req) => JSON.stringify(req.body))
@@ -77,7 +76,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 })
 
 // add person to phonebook
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
 
     if (!body.name || !body.number){
@@ -94,9 +93,11 @@ app.post('/api/persons', (req, res) => {
       number: body.number,
     })
 
-    person.save().then(savedPerson => {
-      res.json(savedPerson)
-    })
+    person.save()
+      .then(savedPerson => {
+        res.json(savedPerson)
+      })
+      .catch(error => next(error))
 })
 
 //update person on phonebook
@@ -114,6 +115,21 @@ app.put('/api/persons/:id', (req, res, next) => {
     })
     .catch(error => next(error))
 })
+
+// Error controler
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({error: error.message})
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 // Init server on port 3001
 const PORT = process.env.PORT || 3001
