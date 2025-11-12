@@ -4,7 +4,7 @@
 // Importamos el modulo del server web
 require('dotenv').config()
 const express = require('express')
-const app = express() 
+const app = express()
 
 const cors = require('cors')
 
@@ -24,7 +24,7 @@ app.get('/api/notes', (request, response) => {
   })
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id)
     .then(note => {
 
@@ -40,7 +40,7 @@ app.get('/api/notes/:id', (request, response) => {
 
 app.delete('/api/notes/:id', (req, res, next) => {
   Note.findByIdAndDelete(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -94,7 +94,7 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
-    return response.status(400).json({error: error.message})
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)

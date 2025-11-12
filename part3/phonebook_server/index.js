@@ -4,7 +4,7 @@
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
-const app = express() 
+const app = express()
 
 app.use(express.json())
 app.use(express.static('dist'))
@@ -35,7 +35,7 @@ app.get('/api/persons', (req, res, next) => {
         if (persons){
           res.json(persons)
         } else {
-          response.status(404).end()
+          res.status(404).end()
         }
       })
       .catch(error => next(error))
@@ -49,9 +49,8 @@ app.get('/info', (req, res) => {
         res.send(`
           <p>Phonebook has info for ${persons.length} people</p>
           <p>${time}</p>
-        `)          
+        `)
       })
-    
 })
 
 //print one single persons from phonebook by id
@@ -59,9 +58,9 @@ app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id)
       .then(person => {
         if (person) {
-          response.json(person)
+          res.json(person)
         } else {
-          response.status(404).end()
+          res.status(404).end()
         }
     })
       .catch(error => next(error))
@@ -70,7 +69,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 // delete person of phonebook by id
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndDelete(req.params.id)
-      .then(result => {
+      .then(() => {
         res.status(204).end()
       })
       .catch(error => next(error))
@@ -85,7 +84,7 @@ app.post('/api/persons', (req, res, next) => {
             error: 'No name or number'
         })
     }
-    
+
     const id = Math.floor(1000 + Math.random() * 9000);
 
     const person = new Person({
@@ -110,9 +109,9 @@ app.put('/api/persons/:id', (req, res, next) => {
     number: body.number,
   }
 
-  Person.findByIdAndUpdate(req.params.id, person, {new: true})
-    .then(uddatedPerson => {
-      res.json(udpatePerson)
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson)
     })
     .catch(error => next(error))
 })
@@ -124,7 +123,7 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
-    return response.status(400).json({error: error.message})
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)

@@ -5,7 +5,7 @@ if (process.argv.length<3) {
   process.exit(1)
 }
 
-if (process.argv.length==3){
+if (process.argv.length===3){
     const password = process.argv[2]
 
     const url =
@@ -52,7 +52,7 @@ if (process.argv.length>3){
         number: process.argv[4]
     })
 
-    person.save().then(result => {
+    person.save().then(() => {
         console.log('person added')
         mongoose.connection.close()
     })
