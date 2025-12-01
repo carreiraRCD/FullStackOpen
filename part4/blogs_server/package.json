@@ -1,0 +1,21 @@
+{
+  "name": "blogs_server",
+  "version": "1.0.0",
+  "description": "App backend for blogs data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Jorge Carreira",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongodb": "^7.0.0",
+    "mongoose": "^8.19.3",
+    "nodemon": "^3.1.11"
+  }
+}
