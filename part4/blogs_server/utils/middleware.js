@@ -1,12 +1,14 @@
 const logger = require('./logger')
 
 const requestLogger = (req, res, next) => {
-  if(req.method !== "GET"){
-    logger.info('Method:', req.method)
-    logger.info('Path:  ', req.path)
+  
+  logger.info('Method:', req.method)
+  logger.info('Path:  ', req.path)
+  if(req.method === "POST"){
     logger.info('Body:  ', req.body)
-    logger.info('---')
   }
+  logger.info('---')
+  
   next()
 }
 
