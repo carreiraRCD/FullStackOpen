@@ -4,9 +4,9 @@
   "description": "App backend for blogs data",
   "main": "index.js",
   "scripts": {
-    "test": "node --test",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "test": "MODO_ENV=test node --test",
+    "start": "MODO_ENV=production index.js",
+    "dev": "MODO_ENV=development nodemon index.js"
   },
   "author": "Jorge Carreira",
   "license": "MIT",
@@ -18,5 +18,8 @@
     "mongodb": "^7.0.0",
     "mongoose": "^8.19.3",
     "nodemon": "^3.1.11"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4"
   }
 }
