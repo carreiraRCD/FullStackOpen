@@ -37,14 +37,6 @@ test('identifacator is id', async () => {
     assert.ok(response.body[0].id)
 })
 
-/*
-test('the first note is about HTTP methods', async () => {
-  const response = await api.get('/api/notes')
-
-  const contents = response.body.map(e => e.content)
-  assert(contents.includes('HTML is easy'))
-})
-*/
 test('a valid blog can be added ', async () => {
   const newBlog = {
     title: 'async/await simplifies making async calls',
@@ -93,50 +85,6 @@ test('blog without any var empty', async () => {
         .send(newBlog)
         .expect(400)
 })
-/*
-test('note without content is not added', async () => {
-  const newNote = {
-    important: true
-  }
-
-  await api
-    .post('/api/notes')
-    .send(newNote)
-    .expect(400)
-
-  const notesAtEnd = await helper.notesInDb()
-
-  assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
-})
-
-test('a specific note can be viewed', async () => {
-  const notesAtStart = await helper.notesInDb()
-
-  const noteToView = notesAtStart[0]
-
-  const resultNote = await api
-    .get(`/api/notes/${noteToView.id}`)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-
-  assert.deepStrictEqual(resultNote.body, noteToView)
-})
-
-test('a note can be deleted', async () => {
-  const notesAtStart = await helper.notesInDb()
-  const noteToDelete = notesAtStart[0]
-
-  await api
-    .delete(`/api/notes/${noteToDelete.id}`)
-    .expect(204)
-
-  const notesAtEnd = await helper.notesInDb()
-
-  const contents = notesAtEnd.map(r => r.content)
-  assert(!contents.includes(noteToDelete.content))
-
-  assert.strictEqual(notesAtEnd.length, helper.initialNotes.length - 1)
-}) */
 
 after(async () => {
   await mongoose.connection.close()
