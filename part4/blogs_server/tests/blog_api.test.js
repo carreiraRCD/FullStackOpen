@@ -81,6 +81,18 @@ test('blog without likes, values 0', async () => {
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd[blogsAtEnd.length-1].likes, 0)
 })
+
+test('blog without any var empty', async () => {
+    const newBlog = {
+        author: 'Don Falso',
+        likes: 19
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
 /*
 test('note without content is not added', async () => {
   const newNote = {
