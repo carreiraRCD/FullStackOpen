@@ -44,26 +44,28 @@ test('the first note is about HTTP methods', async () => {
   const contents = response.body.map(e => e.content)
   assert(contents.includes('HTML is easy'))
 })
-
-test('a valid note can be added ', async () => {
-  const newNote = {
-    content: 'async/await simplifies making async calls',
-    important: true,
+*/
+test('a valid blog can be added ', async () => {
+  const newBlog = {
+    title: 'async/await simplifies making async calls',
+    author: 'meu pai',
+    url: 'bailando.xv',
+    likes: 4
   }
 
   await api
-    .post('/api/notes')
-    .send(newNote)
+    .post('/api/blogs')
+    .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const notesAtEnd = await helper.notesInDb()
-  assert.strictEqual(notesAtEnd.length, helper.initialNotes.length + 1)
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-  const contents = notesAtEnd.map(n => n.content)
-  assert(contents.includes('async/await simplifies making async calls'))
+  const titles = blogsAtEnd.map(b => b.title)
+  assert(titles.includes(newBlog.title))
 })
-
+/*
 test('note without content is not added', async () => {
   const newNote = {
     important: true
