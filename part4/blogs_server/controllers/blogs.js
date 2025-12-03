@@ -22,7 +22,7 @@ blogRouter.post(`/`, async (req, res, next) => {
         author: body.author,
         title: body.title,
         url: body.url,
-        likes: Math.floor(Math.random()*11)
+        likes: body.likes ? body.likes : 0
     })
 
     try{
