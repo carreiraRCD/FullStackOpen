@@ -31,6 +31,12 @@ test('all blogs are returned', async () => {
    assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
+test('identifacator is id', async () => {
+    const response = await api.get('/api/blogs')
+
+    assert.ok(response.body[0].id)
+})
+
 /*
 test('the first note is about HTTP methods', async () => {
   const response = await api.get('/api/notes')
