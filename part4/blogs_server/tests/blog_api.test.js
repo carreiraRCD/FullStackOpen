@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const Blog = require('../models/blog')
 
 const mongoose = require('mongoose')
@@ -9,81 +9,87 @@ const helper = require('./test_helper')
 
 const api = supertest(app)
 
-beforeEach(async () => {
-  await Blog.deleteMany({})
+describe('test for backend of Blogs', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({})
 
-  for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-  }
-})
+    for (let blog of helper.initialBlogs) {
+      let blogObject = new Blog(blog)
+      await blogObject.save()
+    }
+  })
 
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/) //Expresion regular para evitar problemas de cadenas
-})
+  describe('test for api GET to /api/blogs', () => {
+    test('blogs are returned as json', async () => {
+      await api
+        .get('/api/blogs')
+        .expect(200)
+        .expect('Content-Type', /application\/json/) //Expresion regular para evitar problemas de cadenas
+    })
 
-test('all blogs are returned', async () => {
-  const response = await api.get('/api/blogs')
+    test('all blogs are returned', async () => {
+      const response = await api.get('/api/blogs')
 
-   assert.strictEqual(response.body.length, helper.initialBlogs.length)
-})
+      assert.strictEqual(response.body.length, helper.initialBlogs.length)
+    })
 
-test('identifacator is id', async () => {
-    const response = await api.get('/api/blogs')
+    test('identifacator is id', async () => {
+        const response = await api.get('/api/blogs')
 
-    assert.ok(response.body[0].id)
-})
+        assert.ok(response.body[0].id)
+    })
+  })
 
-test('a valid blog can be added ', async () => {
-  const newBlog = {
-    title: 'async/await simplifies making async calls',
-    author: 'meu pai',
-    url: 'bailando.xv',
-    likes: 4
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
-
-  const blogsAtEnd = await helper.blogsInDb()
-  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
-
-  const titles = blogsAtEnd.map(b => b.title)
-  assert(titles.includes(newBlog.title))
-})
-
-test('blog without likes, values 0', async () => {
-    const newBlog = {
+  describe('test for api POST to /api/blogs', () => {
+    test('a valid blog can be added ', async () => {
+      const newBlog = {
         title: 'async/await simplifies making async calls',
         author: 'meu pai',
-        url: 'bailando.xv'
-    }
+        url: 'bailando.xv',
+        likes: 4
+      }
 
-    await api
+      await api
         .post('/api/blogs')
         .send(newBlog)
         .expect(201)
-    
-    const blogsAtEnd = await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd[blogsAtEnd.length-1].likes, 0)
-})
+        .expect('Content-Type', /application\/json/)
 
-test('blog without any var empty', async () => {
-    const newBlog = {
-        author: 'Don Falso',
-        likes: 19
-    }
+      const blogsAtEnd = await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
+      const titles = blogsAtEnd.map(b => b.title)
+      assert(titles.includes(newBlog.title))
+    })
+
+    test('blog without likes, values 0', async () => {
+        const newBlog = {
+            title: 'async/await simplifies making async calls',
+            author: 'meu pai',
+            url: 'bailando.xv'
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+        
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd[blogsAtEnd.length-1].likes, 0)
+    })
+
+    test('blog without any var empty', async () => {
+        const newBlog = {
+            author: 'Don Falso',
+            likes: 19
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+    })
+  })
 })
 
 after(async () => {
