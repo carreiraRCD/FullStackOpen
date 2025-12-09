@@ -115,6 +115,25 @@ describe('test for api DELETE /api/blogs/id', () => {
   })
 })
 
+describe('test for api PUT /api/blog/id', () => {
+  test('add a like to existant blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    await api
+          .put(`/api/blogs/${blogToUpdate.id}`)
+          .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd[0].likes, blogToUpdate.likes + 1)
+  })
+
+  test('update a non existant blog', async () => {
+    await api
+          .delete(`/api/blogs/25`)
+          .expect(400)
+  })
+})
 
 after(async () => {
   await mongoose.connection.close()
