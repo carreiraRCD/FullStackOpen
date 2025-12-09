@@ -92,6 +92,30 @@ describe('test for backend of Blogs', () => {
   })
 })
 
+describe('test for api DELETE /api/blogs/id', () => {
+  test('delete a blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+          .delete(`/api/blogs/${blogToDelete.id}`)
+          .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    const titles = blogsAtEnd.map(b => b.title)
+    assert(!titles.includes(blogToDelete.title))
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+  })
+
+  test('delete a non existant blog', async () => {
+    await api
+          .delete(`/api/blogs/25`)
+          .expect(400)
+  })
+})
+
+
 after(async () => {
   await mongoose.connection.close()
 })
