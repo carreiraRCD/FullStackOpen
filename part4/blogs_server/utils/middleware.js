@@ -23,6 +23,10 @@ const errorHandler = (error, req, res, next) => {
     return res.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return res.status(400).json({ error: error.message })
+  } else if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error collection')) {
+    return res.status(400).json({ error: 'expected `username` must be unique'})
+  } else if (error.name === 'Error' && error.message.includes('data and salt arguments required')) {
+    return res.status(400).json({ error: 'expected required arguments was empty'})
   }
 
   next(error)
